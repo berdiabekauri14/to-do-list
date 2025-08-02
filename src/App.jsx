@@ -14,6 +14,12 @@ export default React.memo(function App() {
     }
   }, []);
 
+  useEffect(() => {
+    if (tasks.length > 0 && tasks.every(task => task.completed)) {
+      alert("Congratulations! All tasks have been completed.");
+    }
+  }, [tasks]);
+
   const clearPlaceholder = () => {
     if (textareaRef.current) {
       textareaRef.current.placeholder = "";
@@ -99,6 +105,7 @@ export default React.memo(function App() {
                 <span style={{ textDecoration: task.completed ? "line-through" : "none" }}>
                   {task.text}
                 </span>
+                { task.completed ? <span className='text-green-500'> (Completed)</span> : <span className='text-red-500'> (Not Completed)</span>}
                 <button className='bg-red-500 text-white p-1 rounded ml-2 cursor-pointer' onClick={() => deleteTask(index)}>Delete</button>
               </li>
             ))
