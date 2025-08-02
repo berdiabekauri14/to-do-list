@@ -1,9 +1,18 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 export default React.memo(function App() {
   const [tasks, setTasks] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
   const textareaRef = useRef(null);
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("Theme");
+    if (savedTheme === "dark") {
+      setDarkMode(true);
+    } else if (savedTheme === "light") {
+      setDarkMode(false);
+    }
+  }, []);
 
   const clearPlaceholder = () => {
     if (textareaRef.current) {
@@ -51,7 +60,11 @@ export default React.memo(function App() {
   };
 
   const handleDarkModeToggle = () => {
-    setDarkMode((prev) => !prev);
+    setDarkMode((prev) => {
+      const newMode = !prev;
+      localStorage.setItem("Theme", newMode ? "dark" : "light");
+      return newMode;
+    });
   };
 
   return (
