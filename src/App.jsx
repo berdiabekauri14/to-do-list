@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 
 export default React.memo(function App() {
   const [tasks, setTasks] = useState([]);
+  const [darkMode, setDarkMode] = useState(false);
   const textareaRef = useRef(null);
 
   const clearPlaceholder = () => {
@@ -49,14 +50,25 @@ export default React.memo(function App() {
     alert("All tasks has been deleted")
   };
 
+  const handleDarkModeToggle = () => {
+    setDarkMode((prev) => !prev);
+  };
+
   return (
-    <div className=' text-center flex justify-center items-center flex-col h-screen'>
+    <div className={`text-center flex justify-center items-center flex-col h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
+        <button
+          className='cursor-pointer bg-gray-500 text-white p-2 rounded m-2'
+          onClick={handleDarkModeToggle}
+        >
+          {darkMode ? 'Turn off dark mode' : 'Turn on dark mode'}
+        </button>
+        <br />
         <h1 className='text-4xl font-bold'>To-do List</h1>
         <br />
         <form name="form">
           <textarea
             ref={textareaRef}
-            className='border border-gray-300 p-2 rounded outline-0'
+            className={`border p-2 rounded outline-0 ${darkMode ? 'bg-gray-800 border-gray-600 text-white' : 'border-gray-300 bg-white text-black'}`}
             type="text"
             placeholder="Add a new task"
             name="input"
@@ -86,4 +98,4 @@ export default React.memo(function App() {
         </div>
     </div>
   );
-})
+});
