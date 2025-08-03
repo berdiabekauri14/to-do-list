@@ -22,7 +22,7 @@ export default React.memo(function App() {
 
   const clearPlaceholder = () => {
     if (textareaRef.current) {
-      textareaRef.current.placeholder = "";
+      textareaRef.current.placeholder = "Add a new task";
     }
   };
 
