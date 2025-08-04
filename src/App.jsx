@@ -113,7 +113,7 @@ export default React.memo(function App() {
           <ul name="list">
           {tasks.map((task, index) => (
             <li key={index} className=' m-1'>
-              <button className={task.completed ? "cursor-pointer m-1 border-2 border-black size-5 bg-green-500" : "cursor-pointer m-1 border-2 border-black size-5"} onClick={() => toggleTaskCompleted(index)}><span className={task.completed ? " text-white relative bottom-1.5" : ""}>{task.completed ? "✓" : ""}</span></button>
+              {darkMode ? <button className={ task.completed ? "cursor-pointer m-1 border-2 border-white size-5 bg-green-500" : "cursor-pointer m-1 border-2 border-white size-5" } onClick={() => toggleTaskCompleted(index)}><span className={task.completed ? " text-white relative bottom-1.5" : ""}>{task.completed ? "✓" : ""}</span></button> : <button className={ task.completed ? "cursor-pointer m-1 border-2 border-black size-5 bg-green-500" : "cursor-pointer m-1 border-2 border-black size-5" } onClick={() => toggleTaskCompleted(index)}><span className={task.completed ? " text-white relative bottom-1.5" : ""}>{task.completed ? "✓" : ""}</span></button>}
               <span style={{ textDecoration: task.completed ? "line-through" : "none" }}>
                 {task.text}
               </span>
