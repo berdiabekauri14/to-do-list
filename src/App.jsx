@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import img from './assets/logo.png';
 
 export default React.memo(function App() {
   const [tasks, setTasks] = useState([]);
@@ -82,7 +83,7 @@ export default React.memo(function App() {
           {darkMode ? 'Turn off dark mode' : 'Turn on dark mode'}
         </button>
         <br />
-        <h1 className='text-4xl font-bold'>To-do List</h1>
+        <h1 className='text-4xl font-bold'><button><img src={img} width={50} className=' relative top-3' alt="" /></button> To-do List</h1>
         <br />
         <form name="form">
           <textarea
