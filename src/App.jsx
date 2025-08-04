@@ -120,7 +120,7 @@ export default React.memo(function App() {
               { task.completed ? <span className='text-green-500'> (Completed)</span> : <span className='text-red-500'> (Not Completed)</span>}
               <button className='bg-red-500 text-white p-1 rounded ml-2 cursor-pointer' onClick={() => deleteTask(index)}>Delete</button>
               {pendingDeleteIndex === index && (
-                <div className="inline-block ml-4 bg-gray-200 text-black p-2 rounded shadow">
+                <div className={darkMode ? "bg-gray-800 text-white p-2 rounded mt-2" : "bg-gray-200 text-black p-2 rounded mt-2"}>
                   <span>Are you sure you want to delete this task?</span>
                   <button className="bg-green-500 text-white p-1 rounded ml-2 cursor-pointer" onClick={confirmDeleteTask}>Yes</button>
                   <button className="bg-gray-500 text-white p-1 rounded ml-2 cursor-pointer" onClick={cancelDeleteTask}>No</button>
