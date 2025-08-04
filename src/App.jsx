@@ -4,6 +4,7 @@ import img from './assets/logo.PNG';
 export default React.memo(function App() {
   const [tasks, setTasks] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
+  const [pendingDeleteIndex, setPendingDeleteIndex] = useState(null);
   const textareaRef = useRef(null);
 
   useEffect(() => {
@@ -44,6 +45,7 @@ export default React.memo(function App() {
       return;
     } else if (tasks.some(task => task.text === input)) {
       alert("This task already exists.");
+      clearPlaceholder();
       return;
     }
 
@@ -53,8 +55,17 @@ export default React.memo(function App() {
   };
 
   const deleteTask = (index) => {
-    setTasks(tasks.filter((_, i) => i !== index));
-  }
+    setPendingDeleteIndex(index);
+  };
+
+  const confirmDeleteTask = () => {
+    setTasks(tasks.filter((_, i) => i !== pendingDeleteIndex));
+    setPendingDeleteIndex(null);
+  };
+
+  const cancelDeleteTask = () => {
+    setPendingDeleteIndex(null);
+  };
 
   const deleteTasks = () => {
     if (tasks.length === 0) {
@@ -100,18 +111,25 @@ export default React.memo(function App() {
         <div>
           <h1 className='text-2xl font-semibold'>Your tasks will be shown here: </h1>
           <ul name="list">
-            {tasks.map((task, index) => (
-              <li key={index} className=' m-1'>
-                <button className='cursor-pointer m-1' onClick={() => toggleTaskCompleted(index)}>●</button>
-                <span style={{ textDecoration: task.completed ? "line-through" : "none" }}>
-                  {task.text}
-                </span>
-                { task.completed ? <span className='text-green-500'> (Completed)</span> : <span className='text-red-500'> (Not Completed)</span>}
-                <button className='bg-red-500 text-white p-1 rounded ml-2 cursor-pointer' onClick={() => deleteTask(index)}>Delete</button>
-              </li>
-            ))
-            }
-          </ul>
+          {tasks.map((task, index) => (
+            <li key={index} className=' m-1'>
+              <button className={task.completed ? "cursor-pointer m-1 border-2 border-black size-5 bg-green-500" : "cursor-pointer m-1 border-2 border-black size-5"} onClick={() => toggleTaskCompleted(index)}><span className={task.completed ? " text-white relative bottom-1.5" : ""}>{task.completed ? "✓" : ""}</span></button>
+              <span style={{ textDecoration: task.completed ? "line-through" : "none" }}>
+                {task.text}
+              </span>
+              { task.completed ? <span className='text-green-500'> (Completed)</span> : <span className='text-red-500'> (Not Completed)</span>}
+              <button className='bg-red-500 text-white p-1 rounded ml-2 cursor-pointer' onClick={() => deleteTask(index)}>Delete</button>
+              {pendingDeleteIndex === index && (
+                <div className="inline-block ml-4 bg-gray-200 text-black p-2 rounded shadow">
+                  <span>Are you sure you want to delete this task?</span>
+                  <button className="bg-green-500 text-white p-1 rounded ml-2 cursor-pointer" onClick={confirmDeleteTask}>Yes</button>
+                  <button className="bg-gray-500 text-white p-1 rounded ml-2 cursor-pointer" onClick={cancelDeleteTask}>No</button>
+                </div>
+              )}
+            </li>
+          ))
+          }
+        </ul>
           <br />
           {
             tasks.length === 0 ? <p className='text-gray-500 font-black'>No tasks available</p> : <button className='bg-red-500 text-white p-1 rounded ml-2 cursor-pointer' onClick={deleteTasks}>Delete Tasks</button>
