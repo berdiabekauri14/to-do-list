@@ -2,7 +2,11 @@ import React, { useState, useRef, useEffect } from 'react';
 import img from './assets/logo.PNG';
 
 export default React.memo(function App() {
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState(() => {
+    const savedTasks = localStorage.getItem("Tasks");
+    return savedTasks ? JSON.parse(savedTasks) : [];
+  });
+
   const [darkMode, setDarkMode] = useState(false);
   const [pendingDeleteIndex, setPendingDeleteIndex] = useState(null);
   const textareaRef = useRef(null);
@@ -20,6 +24,10 @@ export default React.memo(function App() {
     if (tasks.length > 0 && tasks.every(task => task.completed)) {
       alert("Congratulations! All tasks have been completed.");
     }
+  }, [tasks]);
+
+  useEffect(() => {
+    localStorage.setItem("Tasks", JSON.stringify(tasks));
   }, [tasks]);
 
   const clearPlaceholder = () => {
@@ -132,7 +140,7 @@ export default React.memo(function App() {
         </ul>
           <br />
           {
-            tasks.length === 0 ? <p className='text-gray-500 font-black'>No tasks available</p> : <button className='bg-red-500 text-white p-1 rounded ml-2 cursor-pointer' onClick={deleteTasks}>Delete Tasks</button>
+            tasks.length === 0 ? <p className='text-gray-500 font-black'>No tasks available</p> : <button className='bg-red-500 text-white p-1 rounded ml-2 cursor-pointer' onClick={deleteTasks}>Delete All Tasks</button>
           }
         </div>
     </div>
