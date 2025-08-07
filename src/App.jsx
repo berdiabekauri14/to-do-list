@@ -9,6 +9,7 @@ export default React.memo(function App() {
 
   const [darkMode, setDarkMode] = useState(false);
   const [pendingDeleteIndex, setPendingDeleteIndex] = useState(null);
+  const [pendingDeleteAll, setPendingDeleteAll] = useState(false);
   const textareaRef = useRef(null);
 
   useEffect(() => {
@@ -80,10 +81,19 @@ export default React.memo(function App() {
       alert("You didn't created a task yet");
       return;
     }
-
-    setTasks([]);
-    alert("All tasks has been deleted")
+    
+    setPendingDeleteAll(true);
   };
+
+  const confirmDeleteAllTasks = () => {
+    setTasks([]);
+    setPendingDeleteAll(false);
+    alert("All tasks have been deleted.");
+  }
+
+  const cancelDeleteAllTasks = () => {
+    setPendingDeleteAll(false);
+  }
 
   const handleDarkModeToggle = () => {
     setDarkMode((prev) => {
@@ -140,7 +150,20 @@ export default React.memo(function App() {
         </ul>
           <br />
           {
-            tasks.length === 0 ? <p className='text-gray-500 font-black'>No tasks available</p> : <button className='bg-red-500 text-white p-1 rounded ml-2 cursor-pointer' onClick={deleteTasks}>Delete All Tasks</button>
+            tasks.length === 0 ? (
+              <p className='text-gray-500 font-black'>No tasks available</p>
+            ) : pendingDeleteAll ? (
+              <div>
+                <button className='bg-red-500 text-white p-1 rounded ml-2 cursor-pointer' onClick={deleteTasks}>Delete All Tasks</button>
+                <div className={darkMode ? "bg-gray-800 text-white p-2 rounded mt-2" : "bg-gray-200 text-black p-2 rounded mt-2"}>
+                <span>Are you sure you want to delete all tasks?</span>
+                <button className="bg-green-500 text-white p-1 rounded ml-2 cursor-pointer" onClick={confirmDeleteAllTasks}>Yes</button>
+                <button className="bg-gray-500 text-white p-1 rounded ml-2 cursor-pointer" onClick={cancelDeleteAllTasks}>No</button>
+                </div>
+              </div>
+            ) : (
+              <button className='bg-red-500 text-white p-1 rounded ml-2 cursor-pointer' onClick={deleteTasks}>Delete All Tasks</button>
+            )
           }
         </div>
     </div>
