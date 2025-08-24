@@ -58,7 +58,7 @@ export default React.memo(function App() {
       return;
     }
 
-    setTasks([...tasks, { text: input, completed: false }]);
+    setTasks([...tasks, { task: input, completed: false }]);
     textareaRef.current.value = "";
     clearPlaceholder();
   };
@@ -70,6 +70,7 @@ export default React.memo(function App() {
   const confirmDeleteTask = () => {
     setTasks(tasks.filter((_, i) => i !== pendingDeleteIndex));
     setPendingDeleteIndex(null);
+    alert(`The task ${pendingDeleteIndex} has been deleted`);
   };
 
   const cancelDeleteTask = () => {
@@ -132,8 +133,9 @@ export default React.memo(function App() {
           {tasks.map((task, index) => (
             <li key={index} className=' m-1'>
               {darkMode ? <button className={ task.completed ? "cursor-pointer m-1 border-2 border-white size-5 bg-green-500" : "cursor-pointer m-1 border-2 border-white size-5" } onClick={() => toggleTaskCompleted(index)}><span className={task.completed ? " text-white relative bottom-1.5" : ""}>{task.completed ? "✓" : ""}</span></button> : <button className={ task.completed ? "cursor-pointer m-1 border-2 border-black size-5 bg-green-500" : "cursor-pointer m-1 border-2 border-black size-5" } onClick={() => toggleTaskCompleted(index)}><span className={task.completed ? " text-white relative bottom-1.5" : ""}>{task.completed ? "✓" : ""}</span></button>}
+              <span className="font-mono text-xs italic text-gray-400 mr-2">[{index}]</span>
               <span style={{ textDecoration: task.completed ? "line-through" : "none" }}>
-                {task.text}
+                {task.task}
               </span>
               { task.completed ? <span className='text-green-500'> (Completed)</span> : <span className='text-red-500'> (Not Completed)</span>}
               <button className='bg-red-500 text-white p-1 rounded ml-2 cursor-pointer' onClick={() => deleteTask(index)}>Delete</button>
@@ -156,9 +158,9 @@ export default React.memo(function App() {
               <div>
                 <button className='bg-red-500 text-white p-1 rounded ml-2 cursor-pointer' onClick={deleteTasks}>Delete All Tasks</button>
                 <div className={darkMode ? "bg-gray-800 text-white p-2 rounded mt-2" : "bg-gray-200 text-black p-2 rounded mt-2"}>
-                <span>Are you sure you want to delete all tasks?</span>
-                <button className="bg-green-500 text-white p-1 rounded ml-2 cursor-pointer" onClick={confirmDeleteAllTasks}>Yes</button>
-                <button className="bg-gray-500 text-white p-1 rounded ml-2 cursor-pointer" onClick={cancelDeleteAllTasks}>No</button>
+                  <span>Are you sure you want to delete all tasks?</span>
+                  <button className="bg-green-500 text-white p-1 rounded ml-2 cursor-pointer" onClick={confirmDeleteAllTasks}>Yes</button>
+                  <button className="bg-gray-500 text-white p-1 rounded ml-2 cursor-pointer" onClick={cancelDeleteAllTasks}>No</button>
                 </div>
               </div>
             ) : (
