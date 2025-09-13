@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import img from './assets/logo.PNG';
+import Menu from './components/Menu';
 
 export default React.memo(function App() {
   const [tasks, setTasks] = useState(() => {
@@ -8,7 +9,6 @@ export default React.memo(function App() {
   });
 
   const [darkMode, setDarkMode] = useState(false);
-  const [pendingDeleteIndex, setPendingDeleteIndex] = useState(null);
   const [pendingDeleteAll, setPendingDeleteAll] = useState(false);
   const textareaRef = useRef(null);
 
@@ -63,18 +63,14 @@ export default React.memo(function App() {
     clearPlaceholder();
   };
 
-  const deleteTask = (index) => {
-    setPendingDeleteIndex(index);
-  };
-
-  const confirmDeleteTask = () => {
-    setTasks(tasks.filter((_, i) => i !== pendingDeleteIndex));
-    setPendingDeleteIndex(null);
-    alert(`The task ${pendingDeleteIndex} has been deleted`);
-  };
-
-  const cancelDeleteTask = () => {
-    setPendingDeleteIndex(null);
+  const handleAddSubTask = (taskIndex, subTaskText) => {
+    setTasks(tasks =>
+      tasks.map((task, i) =>
+        i === taskIndex
+          ? { ...task, subTasks: [...(task.subTasks || []), subTaskText] }
+          : task
+      )
+    );
   };
 
   const deleteTasks = () => {
@@ -82,7 +78,6 @@ export default React.memo(function App() {
       alert("You didn't created a task yet");
       return;
     }
-    
     setPendingDeleteAll(true);
   };
 
@@ -104,8 +99,10 @@ export default React.memo(function App() {
     });
   };
 
+  const [showMenuIndex, setShowMenuIndex] = useState(null);
+
   return (
-    <div className={`text-center flex justify-center items-center flex-col h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
+    <div style={{ position: "relative" }} className={`text-center flex justify-center items-center flex-col h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
         <button
           className='cursor-pointer bg-gray-500 text-white p-2 rounded m-2'
           onClick={handleDarkModeToggle}
@@ -113,7 +110,9 @@ export default React.memo(function App() {
           {darkMode ? 'Turn off dark mode' : 'Turn on dark mode'}
         </button>
         <br />
-        <h1 className='text-4xl font-bold'><button><img src={img} width={50} className=' relative top-3' alt="img" /></button> To-do List</h1>
+        <h1 className='text-4xl font-bold'>
+          <img src={img} width={50} className='relative right-13 top-12' alt="img" /> To-do List
+        </h1>
         <br />
         <form name="form">
           <textarea
@@ -129,22 +128,33 @@ export default React.memo(function App() {
         <br />
         <div>
           <h1 className='text-2xl font-semibold'>Your tasks will be shown here: </h1>
-          <ul name="list">
+          <ul name="list" style={{ position: "relative" }}>
           {tasks.map((task, index) => (
-            <li key={index} className=' m-1'>
+            <li key={index} className='m-1' style={{ position: "relative" }}>
               {darkMode ? <button className={ task.completed ? "cursor-pointer m-1 border-2 border-white size-5 bg-green-500" : "cursor-pointer m-1 border-2 border-white size-5" } onClick={() => toggleTaskCompleted(index)}><span className={task.completed ? " text-white relative bottom-1.5" : ""}>{task.completed ? "✓" : ""}</span></button> : <button className={ task.completed ? "cursor-pointer m-1 border-2 border-black size-5 bg-green-500" : "cursor-pointer m-1 border-2 border-black size-5" } onClick={() => toggleTaskCompleted(index)}><span className={task.completed ? " text-white relative bottom-1.5" : ""}>{task.completed ? "✓" : ""}</span></button>}
               <span className="font-mono text-xs italic text-gray-400 mr-2">[{index + 1}].</span>
               <span style={{ textDecoration: task.completed ? "line-through" : "none" }}>
                 {task.text}
               </span>
               { task.completed ? <span className='text-green-500'> (Completed)</span> : <span className='text-red-500'> (Not Completed)</span>}
-              <button className='bg-red-500 text-white p-1 rounded ml-2 cursor-pointer' onClick={() => deleteTask(index)}>Delete</button>
-              {pendingDeleteIndex === index && (
-                <div className={darkMode ? "bg-gray-800 text-white p-2 rounded mt-2" : "bg-gray-200 text-black p-2 rounded mt-2"}>
-                  <span>Are you sure you want to delete this task?</span>
-                  <button className="bg-green-500 text-white p-1 rounded ml-2 cursor-pointer" onClick={confirmDeleteTask}>Yes</button>
-                  <button className="bg-gray-500 text-white p-1 rounded ml-2 cursor-pointer" onClick={cancelDeleteTask}>No</button>
-                </div>
+              <button
+                className="text-gray-500 cursor-pointer"
+                onClick={() => setShowMenuIndex(index)}
+                style={{ marginLeft: "8px" }}
+              >
+                  •
+                  •
+                  •
+              </button>
+              {showMenuIndex === index && (
+                <Menu
+                  index={index}
+                  tasks={tasks}
+                  setTasks={setTasks}
+                  darkMode={darkMode}
+                  closeMenu={() => setShowMenuIndex(null)}
+                  onAddSubtask={handleAddSubTask}
+                />
               )}
             </li>
           ))
