@@ -25,7 +25,7 @@ export default function SubTask({ taskId, onAddSubTask }) {
             <textarea
                 type="text"
                 value={subTaskText}
-                className={`border p-2 rounded outline-0 ${darkMode ? 'bg-gray-800 border-gray-600 text-white' : 'border-gray-300 bg-white text-black'}`}
+                className={`border p-2 rounded outline-0 ${darkMode ? 'bg-gray-800 border-gray-600 text-white' : 'border-gray-300 bg-white text-black outline-0'}`}
                 onChange={e => setSubTaskText(e.target.value)}
                 placeholder="Add a subtask..."
             ></textarea>
